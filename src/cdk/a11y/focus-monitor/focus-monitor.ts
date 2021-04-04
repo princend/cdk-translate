@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, normalizePassiveListenerOptions, _getShadowRoot} from '@angular/cdk/platform';
+import { Platform, normalizePassiveListenerOptions, _getShadowRoot } from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
@@ -20,10 +20,10 @@ import {
   Output,
   AfterViewInit,
 } from '@angular/core';
-import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
-import {coerceElement} from '@angular/cdk/coercion';
-import {DOCUMENT} from '@angular/common';
-import {isFakeMousedownFromScreenReader} from '../fake-mousedown';
+import { Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { coerceElement } from '@angular/cdk/coercion';
+import { DOCUMENT } from '@angular/common';
+import { isFakeMousedownFromScreenReader } from '../fake-mousedown';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -64,12 +64,12 @@ export interface FocusMonitorOptions {
 
 /** InjectionToken for FocusMonitorOptions. */
 export const FOCUS_MONITOR_DEFAULT_OPTIONS =
-    new InjectionToken<FocusMonitorOptions>('cdk-focus-monitor-default-options');
+  new InjectionToken<FocusMonitorOptions>('cdk-focus-monitor-default-options');
 
 type MonitoredElementInfo = {
   checkChildren: boolean,
   subject: Subject<FocusOrigin>,
-  rootNode: HTMLElement|ShadowRoot|Document
+  rootNode: HTMLElement | ShadowRoot | Document
 };
 
 /**
@@ -83,7 +83,7 @@ const captureEventListenerOptions = normalizePassiveListenerOptions({
 
 
 /** Monitors mouse and keyboard events to determine the cause of focus events. */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class FocusMonitor implements OnDestroy {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
@@ -118,7 +118,7 @@ export class FocusMonitor implements OnDestroy {
    * handlers differently from the rest of the events, because the browser won't emit events
    * to the document when focus moves inside of a shadow root.
    */
-  private _rootNodeFocusListenerCount = new Map<HTMLElement|Document|ShadowRoot, number>();
+  private _rootNodeFocusListenerCount = new Map<HTMLElement | Document | ShadowRoot, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
@@ -127,9 +127,12 @@ export class FocusMonitor implements OnDestroy {
   private readonly _detectionMode: FocusMonitorDetectionMode;
 
   /**
+   *  文檔上的“ keydown”事件的事件偵聽器。
+   * 需要是一個箭頭函數，以便在綁定上下文時保留上下文。
    * Event listener for `keydown` events on the document.
    * Needs to be an arrow function in order to preserve the context when it gets bound.
    */
+
   private _documentKeydownListener = () => {
     // On keydown record the origin and clear any touch event that may be in progress.
     this._lastTouchTarget = null;
@@ -137,6 +140,10 @@ export class FocusMonitor implements OnDestroy {
   }
 
   /**
+   * 
+   * 文檔上的“ keydown”事件的事件偵聽器。
+   * 需要是一個箭頭函數，以便在綁定上下文時保留上下文。
+
    * Event listener for `mousedown` events on the document.
    * Needs to be an arrow function in order to preserve the context when it gets bound.
    */
@@ -144,6 +151,8 @@ export class FocusMonitor implements OnDestroy {
     // On mousedown record the origin only if there is not touch
     // target, since a mousedown can happen as a result of a touch event.
     if (!this._lastTouchTarget) {
+      //在某些情況下，屏幕閱讀器會觸發偽造的`mousedown`事件而不是`keydown`事件。
+      //如果我們檢測到焦點源之一，則將焦點源解析為“鍵盤”。
       // In some cases screen readers fire fake `mousedown` events instead of `keydown`.
       // Resolve the focus source to `keyboard` if we detect one of them.
       const source = isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse';
@@ -182,12 +191,12 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   constructor(
-      private _ngZone: NgZone,
-      private _platform: Platform,
-      /** @breaking-change 11.0.0 make document required */
-      @Optional() @Inject(DOCUMENT) document: any|null,
-      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
-          FocusMonitorOptions|null) {
+    private _ngZone: NgZone,
+    private _platform: Platform,
+    /** @breaking-change 11.0.0 make document required */
+    @Optional() @Inject(DOCUMENT) document: any | null,
+    @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
+      FocusMonitorOptions | null) {
     this._document = document;
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
@@ -224,7 +233,7 @@ export class FocusMonitor implements OnDestroy {
   monitor(element: ElementRef<HTMLElement>, checkChildren?: boolean): Observable<FocusOrigin>;
 
   monitor(element: HTMLElement | ElementRef<HTMLElement>,
-          checkChildren: boolean = false): Observable<FocusOrigin> {
+    checkChildren: boolean = false): Observable<FocusOrigin> {
     const nativeElement = coerceElement(element);
 
     // Do nothing if we're not on the browser platform or the passed in node isn't an element.
@@ -304,8 +313,8 @@ export class FocusMonitor implements OnDestroy {
   focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
 
   focusVia(element: HTMLElement | ElementRef<HTMLElement>,
-          origin: FocusOrigin,
-          options?: FocusOptions): void {
+    origin: FocusOrigin,
+    options?: FocusOptions): void {
 
     const nativeElement = coerceElement(element);
     const focusedElement = this._getDocument().activeElement;
@@ -425,7 +434,7 @@ export class FocusMonitor implements OnDestroy {
     // touchstart.
     const focusTarget = getTarget(event);
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
-        (focusTarget === this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
+      (focusTarget === this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
   }
 
   /**
@@ -460,7 +469,7 @@ export class FocusMonitor implements OnDestroy {
     const elementInfo = this._elementInfo.get(element);
 
     if (!elementInfo || (elementInfo.checkChildren && event.relatedTarget instanceof Node &&
-        element.contains(event.relatedTarget))) {
+      element.contains(event.relatedTarget))) {
       return;
     }
 
@@ -549,7 +558,7 @@ export class FocusMonitor implements OnDestroy {
 
   /** Updates all the state on an element once its focus origin has changed. */
   private _originChanged(element: HTMLElement, origin: FocusOrigin,
-                         elementInfo: MonitoredElementInfo) {
+    elementInfo: MonitoredElementInfo) {
     this._setClasses(element, origin);
     this._emitOrigin(elementInfo.subject, origin);
     this._lastFocusOrigin = origin;
@@ -574,7 +583,7 @@ export class FocusMonitor implements OnDestroy {
 }
 
 /** Gets the target of an event, accounting for Shadow DOM. */
-function getTarget(event: Event): HTMLElement|null {
+function getTarget(event: Event): HTMLElement | null {
   // If an event is bound outside the Shadow DOM, the `event.target` will
   // point to the shadow root so we have to use `composedPath` instead.
   return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
@@ -597,14 +606,14 @@ export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
   private _monitorSubscription: Subscription;
   @Output() cdkFocusChange = new EventEmitter<FocusOrigin>();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) {}
+  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) { }
 
   ngAfterViewInit() {
     const element = this._elementRef.nativeElement;
     this._monitorSubscription = this._focusMonitor.monitor(
       element,
       element.nodeType === 1 && element.hasAttribute('cdkMonitorSubtreeFocus'))
-    .subscribe(origin => this.cdkFocusChange.emit(origin));
+      .subscribe(origin => this.cdkFocusChange.emit(origin));
   }
 
   ngOnDestroy() {

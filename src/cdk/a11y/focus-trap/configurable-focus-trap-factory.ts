@@ -21,6 +21,7 @@ import {EventListenerFocusTrapInertStrategy} from './event-listener-inert-strate
 import {FocusTrapManager} from './focus-trap-manager';
 
 /** Factory that allows easy instantiation of configurable focus traps. */
+// 工廠允許輕鬆實例化可配置的焦點陷阱。
 @Injectable({providedIn: 'root'})
 export class ConfigurableFocusTrapFactory {
   private _document: Document;

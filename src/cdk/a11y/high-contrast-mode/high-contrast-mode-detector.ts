@@ -12,6 +12,7 @@ import {Inject, Injectable} from '@angular/core';
 
 
 /** Set of possible high-contrast mode backgrounds. */
+//一組可能的高對比度模式背景。
 export const enum HighContrastMode {
   NONE,
   BLACK_ON_WHITE,
@@ -19,12 +20,15 @@ export const enum HighContrastMode {
 }
 
 /** CSS class applied to the document body when in black-on-white high-contrast mode. */
+// 在黑白高對比度模式下將CSS類應用於文檔主體。
 export const BLACK_ON_WHITE_CSS_CLASS = 'cdk-high-contrast-black-on-white';
 
 /** CSS class applied to the document body when in white-on-black high-contrast mode. */
+// 處於黑底白高對比度模式時，CSS類應用於文檔主體。
 export const WHITE_ON_BLACK_CSS_CLASS = 'cdk-high-contrast-white-on-black';
 
 /** CSS class applied to the document body when in high-contrast mode. */
+// CSS類在高對比度模式下應用於文檔主體。 
 export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
 
 /**
@@ -37,6 +41,16 @@ export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
  * IE, Edge, and Firefox currently support this mode. Chrome does not support Windows High Contrast
  * Mode. This service does not detect high-contrast mode as added by the Chrome "High Contrast"
  * browser extension.
+ * 
+ * 確定瀏覽器當前是否處於高對比度模式環境中的服務。
+ *
+ * Microsoft Windows支持一種稱為“高對比度模式”的可訪問性功能。這個模式
+ * 更改所有應用程序（包括Web應用程序）的外觀，以顯著增加
+ * 對比。
+ *
+ * IE，Edge和Firefox當前支持此模式。 Chrome瀏覽器不支持Windows高對比度
+ * 模式。此服務無法檢測到由Chrome“高對比度”添加的高對比度模式
+ * 瀏覽器擴展。
  */
 @Injectable({providedIn: 'root'})
 export class HighContrastModeDetector {

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOCUMENT} from '@angular/common';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterContentInit,
   Directive,
@@ -21,8 +21,8 @@ import {
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
-import {take} from 'rxjs/operators';
-import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
+import { take } from 'rxjs/operators';
+import { InteractivityChecker } from '../interactivity-checker/interactivity-checker';
 
 
 /**
@@ -31,9 +31,16 @@ import {InteractivityChecker} from '../interactivity-checker/interactivity-check
  * This class currently uses a relatively simple approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
  * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause the two to misalign.
+ * 允許在DOM元素內捕獲焦點的類。
+ *
+ * 此類當前使用相對簡單的方法來進行焦點trapping。
+ * 假定製表符順序與DOM順序相同，但不一定正確。
+ * 諸如“ tabIndex> 0”，“伸縮”順序和陰影根之類的東西都可能導致兩者未對齊。
  *
  * @deprecated Use `ConfigurableFocusTrap` instead.
  * @breaking-change for 11.0.0 Remove this class.
+ * @deprecated 改用`ConfigurableFocusTrap`。
+ * @ 0.0.11的@ breaking-change刪除此類。
  */
 export class FocusTrap {
   private _startAnchor: HTMLElement | null;
@@ -41,10 +48,12 @@ export class FocusTrap {
   private _hasAttached = false;
 
   // Event listeners for the anchors. Need to be regular functions so that we can unbind them later.
+  // 錨點的事件偵聽器。需要是常規函數，以便我們以後可以將它們解除綁定。
   protected startAnchorListener = () => this.focusLastTabbableElement();
   protected endAnchorListener = () => this.focusFirstTabbableElement();
 
   /** Whether the focus trap is active. */
+  // 聚焦陷阱是否處於活動狀態。
   get enabled(): boolean { return this._enabled; }
   set enabled(value: boolean) {
     this._enabled = value;
@@ -69,6 +78,7 @@ export class FocusTrap {
   }
 
   /** Destroys the focus trap by cleaning up the anchors. */
+  //清理錨點以破壞聚焦陷阱。
   destroy() {
     const startAnchor = this._startAnchor;
     const endAnchor = this._endAnchor;
@@ -98,9 +108,14 @@ export class FocusTrap {
    * in the constructor, but can be deferred for cases like directives with `*ngIf`.
    * @returns Whether the focus trap managed to attach successfuly. This may not be the case
    * if the target element isn't currently in the DOM.
+   * 將錨點插入DOM。通常這是自動完成的
+   * 在構造函數中，但對於諸如帶有* ngIf`指令的情況可以推遲。
+   * @returns聚焦陷阱是否成功連接。情況可能並非如此
+   * 如果目標元素當前不在DOM中。
    */
   attachAnchors(): boolean {
     // If we're not on the browser, there can be no focus to trap.
+    // 如果我們不在瀏覽器上，就不會有任何trap。
     if (this._hasAttached) {
       return true;
     }
@@ -170,19 +185,19 @@ export class FocusTrap {
   private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
     // Contains the deprecated version of selector, for temporary backwards comparability.
     let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
-                                                 `[cdkFocusRegion${bound}], ` +
-                                                 `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
+      `[cdkFocusRegion${bound}], ` +
+      `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
 
     for (let i = 0; i < markers.length; i++) {
       // @breaking-change 8.0.0
       if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}', ` +
-                     `use 'cdkFocusRegion${bound}' instead. The deprecated ` +
-                     `attribute will be removed in 8.0.0.`, markers[i]);
+          `use 'cdkFocusRegion${bound}' instead. The deprecated ` +
+          `attribute will be removed in 8.0.0.`, markers[i]);
       } else if (markers[i].hasAttribute(`cdk-focus-region-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-region-${bound}', ` +
-                     `use 'cdkFocusRegion${bound}' instead. The deprecated attribute ` +
-                     `will be removed in 8.0.0.`, markers[i]);
+          `use 'cdkFocusRegion${bound}' instead. The deprecated attribute ` +
+          `will be removed in 8.0.0.`, markers[i]);
       }
     }
 
@@ -190,7 +205,7 @@ export class FocusTrap {
       return markers.length ? markers[0] : this._getFirstTabbableElement(this._element);
     }
     return markers.length ?
-        markers[markers.length - 1] : this._getLastTabbableElement(this._element);
+      markers[markers.length - 1] : this._getLastTabbableElement(this._element);
   }
 
   /**
@@ -200,14 +215,14 @@ export class FocusTrap {
   focusInitialElement(options?: FocusOptions): boolean {
     // Contains the deprecated version of selector, for temporary backwards comparability.
     const redirectToElement = this._element.querySelector(`[cdk-focus-initial], ` +
-                                                          `[cdkFocusInitial]`) as HTMLElement;
+      `[cdkFocusInitial]`) as HTMLElement;
 
     if (redirectToElement) {
       // @breaking-change 8.0.0
       if (redirectToElement.hasAttribute(`cdk-focus-initial`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-initial', ` +
-                    `use 'cdkFocusInitial' instead. The deprecated attribute ` +
-                    `will be removed in 8.0.0`, redirectToElement);
+          `use 'cdkFocusInitial' instead. The deprecated attribute ` +
+          `will be removed in 8.0.0`, redirectToElement);
       }
 
       // Warn the consumer if the element they've pointed to
@@ -357,14 +372,14 @@ export class FocusTrap {
  * @deprecated Use `ConfigurableFocusTrapFactory` instead.
  * @breaking-change for 11.0.0 Remove this class.
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class FocusTrapFactory {
   private _document: Document;
 
   constructor(
-      private _checker: InteractivityChecker,
-      private _ngZone: NgZone,
-      @Inject(DOCUMENT) _document: any) {
+    private _checker: InteractivityChecker,
+    private _ngZone: NgZone,
+    @Inject(DOCUMENT) _document: any) {
 
     this._document = _document;
   }
@@ -378,7 +393,7 @@ export class FocusTrapFactory {
    */
   create(element: HTMLElement, deferCaptureElements: boolean = false): FocusTrap {
     return new FocusTrap(
-        element, this._checker, this._ngZone, this._document, deferCaptureElements);
+      element, this._checker, this._ngZone, this._document, deferCaptureElements);
   }
 }
 
@@ -411,9 +426,9 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   private _autoCapture: boolean;
 
   constructor(
-      private _elementRef: ElementRef<HTMLElement>,
-      private _focusTrapFactory: FocusTrapFactory,
-      @Inject(DOCUMENT) _document: any) {
+    private _elementRef: ElementRef<HTMLElement>,
+    private _focusTrapFactory: FocusTrapFactory,
+    @Inject(DOCUMENT) _document: any) {
 
     this._document = _document;
     this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
@@ -448,7 +463,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
     const autoCaptureChange = changes['autoCapture'];
 
     if (autoCaptureChange && !autoCaptureChange.firstChange && this.autoCapture &&
-        this.focusTrap.hasAttached()) {
+      this.focusTrap.hasAttached()) {
       this._captureFocus();
     }
   }

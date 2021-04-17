@@ -43,6 +43,9 @@ export class LiveAnnouncer implements OnDestroy {
     // We inject the live element and document as `any` because the constructor signature cannot
     // reference browser globals (HTMLElement, Document) on non-browser environments, since having
     // a class decorator causes TypeScript to preserve the constructor signature types.
+    //我們將live元素和文檔注入為any，因為構造函數簽名無法
+    //在非瀏覽器環境中引用瀏覽器全局變量（HTMLElement，Document），因為
+    //類裝飾器使TypeScript保留構造函數的簽名類型。
     this._document = _document;
     this._liveElement = elementToken || this._createLiveElement();
   }
@@ -51,6 +54,9 @@ export class LiveAnnouncer implements OnDestroy {
    * Announces a message to screenreaders.
    * @param message Message to be announced to the screenreader.
    * @returns Promise that will be resolved when the message is added to the DOM.
+   * *向屏幕閱讀器發布一條消息。
+   * @param message消息將通知屏幕閱讀器。
+   * @returns將消息添加到DOM時將解決的Promise。
    */
   announce(message: string): Promise<void>;
 
@@ -59,6 +65,10 @@ export class LiveAnnouncer implements OnDestroy {
    * @param message Message to be announced to the screenreader.
    * @param politeness The politeness of the announcer element.
    * @returns Promise that will be resolved when the message is added to the DOM.
+   * 向屏幕閱讀器發布一條消息。
+   * @param message消息將通知屏幕閱讀器。
+   * @param politeness播音員元素的禮貌。
+   * @returns將消息添加到DOM時將解決的Promise。
    */
   announce(message: string, politeness?: AriaLivePoliteness): Promise<void>;
 
@@ -69,6 +79,12 @@ export class LiveAnnouncer implements OnDestroy {
    *   that this takes effect after the message has been added to the DOM, which can be up to
    *   100ms after `announce` has been called.
    * @returns Promise that will be resolved when the message is added to the DOM.
+   * 向屏幕閱讀器發布一條消息。
+   * @param message消息將通知屏幕閱讀器。
+   * @param duration清除播音員元素的時間（以毫秒為單位）。筆記
+   * 在將郵件添加到DOM後，此操作才生效，最多可以達到
+   * 調用`announce`後的100毫秒。
+   * @returns將消息添加到DOM時將解決的Promise。
    */
   announce(message: string, duration?: number): Promise<void>;
 
@@ -80,6 +96,13 @@ export class LiveAnnouncer implements OnDestroy {
    *   that this takes effect after the message has been added to the DOM, which can be up to
    *   100ms after `announce` has been called.
    * @returns Promise that will be resolved when the message is added to the DOM.
+   * 向屏幕閱讀器發布一條消息。
+   * @param message消息將通知屏幕閱讀器。
+   * @param politeness播音員元素的禮貌。
+   * @param duration清除播音員元素的時間（以毫秒為單位）。筆記
+   * 在將郵件添加到DOM後，此操作才生效，最多可以達到
+   * 調用`announce`後的100毫秒。
+   * @returns將消息添加到DOM時將解決的Promise。
    */
   announce(message: string, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
 
@@ -107,6 +130,7 @@ export class LiveAnnouncer implements OnDestroy {
     }
 
     // TODO: ensure changing the politeness works on all environments we support.
+    // TODO：確保禮貌在我們支持的所有環境中均有效。
     this._liveElement.setAttribute('aria-live', politeness);
 
     // This 100ms timeout is necessary for some browser + screen-reader combinations:
@@ -114,6 +138,11 @@ export class LiveAnnouncer implements OnDestroy {
     // - With Chrome and IE11 with NVDA or JAWS, a repeated (identical) message won't be read a
     //   second time without clearing and then using a non-zero delay.
     // (using JAWS 17 at time of this writing).
+    //對於某些瀏覽器+屏幕閱讀器組合，此100ms超時是必需的：
+    //-IE11上的JAWS和NVDA都不會在沒有非零超時的情況下宣布任何內容。
+    //-使用帶有NVDA或JAWS的Chrome和IE11，將不會讀取重複的（相同的）消息，
+    //第二次不清除，然後使用非零延遲。
+    //（在撰寫本文時使用JAWS 17）。
     return this._ngZone.runOutsideAngular(() => {
       return new Promise(resolve => {
         clearTimeout(this._previousTimeout);
@@ -133,6 +162,9 @@ export class LiveAnnouncer implements OnDestroy {
    * Clears the current text from the announcer element. Can be used to prevent
    * screen readers from reading the text out again while the user is going
    * through the page landmarks.
+   * 從播音員元素中清除當前文本。可以用來預防
+   *屏幕閱讀器在用戶前進時不會再次朗讀文本
+   *通過頁面地標。
    */
   clear() {
     if (this._liveElement) {
@@ -155,6 +187,7 @@ export class LiveAnnouncer implements OnDestroy {
     const liveEl = this._document.createElement('div');
 
     // Remove any old containers. This can happen when coming in from a server-side-rendered page.
+    // 取出所有舊容器。從服務器端渲染的頁面進入時可能會發生這種情況。
     for (let i = 0; i < previousElements.length; i++) {
       previousElements[i].parentNode!.removeChild(previousElements[i]);
     }
@@ -176,13 +209,17 @@ export class LiveAnnouncer implements OnDestroy {
 /**
  * A directive that works similarly to aria-live, but uses the LiveAnnouncer to ensure compatibility
  * with a wider range of browsers and screen readers.
+ * 指令與aria-live相似，但使用LiveAnnouncer來確保兼容性
+ * 具有更廣泛的瀏覽器和屏幕閱讀器。
  */
 @Directive({
   selector: '[cdkAriaLive]',
   exportAs: 'cdkAriaLive',
 })
 export class CdkAriaLive implements OnDestroy {
-  /** The aria-live politeness level to use when announcing messages. */
+  /** The aria-live politeness level to use when announcing messages.
+   * 宣布消息時要使用的 politeness level 。
+   */
   @Input('cdkAriaLive')
   get politeness(): AriaLivePoliteness { return this._politeness; }
   set politeness(value: AriaLivePoliteness) {
@@ -198,10 +235,13 @@ export class CdkAriaLive implements OnDestroy {
           .observe(this._elementRef)
           .subscribe(() => {
             // Note that we use textContent here, rather than innerText, in order to avoid a reflow.
+            // 注意，為了避免重排，我們在這裡使用textContent而不是innerText。
             const elementText = this._elementRef.nativeElement.textContent;
 
             // The `MutationObserver` fires also for attribute
             // changes which we don't want to announce.
+            //屬性也會觸發`MutationObserver`的更改
+            //我們不想announce。
             if (elementText !== this._previousAnnouncedText) {
               this._liveAnnouncer.announce(elementText, this._politeness);
               this._previousAnnouncedText = elementText;

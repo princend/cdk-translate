@@ -178,6 +178,10 @@ export class FocusTrap {
    * the last tabbable element within the focus trap region.
    * @returns Returns a promise that resolves with a boolean, depending
    * on whether focus was moved successfully.
+   * 等待區域穩定，然後聚焦
+   * 焦點陷阱區域內的最後一個可tabbable元素。
+   * @returns返回一個Promise<boolean>，具體取決於
+   * 焦點是否成功轉移。
    */
   focusLastTabbableElementWhenReady(options?: FocusOptions): Promise<boolean> {
     return new Promise<boolean>(resolve => {
@@ -189,6 +193,9 @@ export class FocusTrap {
    * Get the specified boundary element of the trapped region.
    * @param bound The boundary to get (start or end of trapped region).
    * @returns The boundary element.
+   * 獲取trapped區域的指定邊界元素。
+   * @param bound獲取的邊界（捕獲區域的開始或結束）。
+   * @returns邊界元素。
    */
   private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
     // Contains the deprecated version of selector, for temporary backwards comparability.
@@ -219,6 +226,8 @@ export class FocusTrap {
   /**
    * Focuses the element that should be focused when the focus trap is initialized.
    * @returns Whether focus was moved successfully.
+   * 聚焦在初始化聚焦陷阱時應聚焦的元素。
+   * @returns焦點是否成功移動。
    */
   focusInitialElement(options?: FocusOptions): boolean {
     // Contains the deprecated version of selector, for temporary backwards comparability.

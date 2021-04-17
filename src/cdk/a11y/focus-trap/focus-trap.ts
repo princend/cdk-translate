@@ -244,6 +244,8 @@ export class FocusTrap {
 
       // Warn the consumer if the element they've pointed to
       // isn't focusable, when not in production mode.
+      // 警告consumer，如果他們指向的元素
+      // 如果不在生產模式下，則無法聚焦。
       if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
         !this._checker.isFocusable(redirectToElement)) {
         console.warn(`Element matching '[cdkFocusInitial]' is not focusable.`, redirectToElement);
@@ -265,6 +267,8 @@ export class FocusTrap {
   /**
    * Focuses the first tabbable element within the focus trap region.
    * @returns Whether focus was moved successfully.
+   * 在焦點陷阱區域內聚焦第一個 tabbable 元素。
+   * @returns焦點是否成功移動。
    */
   focusFirstTabbableElement(options?: FocusOptions): boolean {
     const redirectToElement = this._getRegionBoundary('start');
@@ -279,6 +283,8 @@ export class FocusTrap {
   /**
    * Focuses the last tabbable element within the focus trap region.
    * @returns Whether focus was moved successfully.
+   * 在焦點陷阱區域內聚焦最後一個可Tabbable元素。
+   * @returns焦點是否成功移動。
    */
   focusLastTabbableElement(options?: FocusOptions): boolean {
     const redirectToElement = this._getRegionBoundary('end');
@@ -292,12 +298,14 @@ export class FocusTrap {
 
   /**
    * Checks whether the focus trap has successfully been attached.
+   * 檢查對焦陷阱是否已成功安裝。
    */
   hasAttached(): boolean {
     return this._hasAttached;
   }
 
   /** Get the first tabbable element from a DOM subtree (inclusive). */
+  // 從DOM子樹（包括DOM）中獲取第一個tabbable元素。
   private _getFirstTabbableElement(root: HTMLElement): HTMLElement | null {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
@@ -305,6 +313,8 @@ export class FocusTrap {
 
     // Iterate in DOM order. Note that IE doesn't have `children` for SVG so we fall
     // back to `childNodes` which includes text nodes, comments etc.
+    // 以DOM順序進行迭代。請注意，IE沒有SVG的“子級”，因此我們
+    // 返回“ childNodes”，其中包括文本節點，註釋等。
     let children = root.children || root.childNodes;
 
     for (let i = 0; i < children.length; i++) {
@@ -321,12 +331,14 @@ export class FocusTrap {
   }
 
   /** Get the last tabbable element from a DOM subtree (inclusive). */
+  //*從DOM子樹（包括DOM）中獲取最後一個可標籤元素。 
   private _getLastTabbableElement(root: HTMLElement): HTMLElement | null {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
     }
 
     // Iterate in reverse DOM order.
+    // 以相反的DOM順序進行迭代。
     let children = root.children || root.childNodes;
 
     for (let i = children.length - 1; i >= 0; i--) {
@@ -343,6 +355,7 @@ export class FocusTrap {
   }
 
   /** Creates an anchor element. */
+  // 創建錨元素。
   private _createAnchor(): HTMLElement {
     const anchor = this._document.createElement('div');
     this._toggleAnchorTabIndex(this._enabled, anchor);
@@ -356,16 +369,23 @@ export class FocusTrap {
    * Toggles the `tabindex` of an anchor, based on the enabled state of the focus trap.
    * @param isEnabled Whether the focus trap is enabled.
    * @param anchor Anchor on which to toggle the tabindex.
+   * 根據焦點陷阱的啟用狀態來切換錨點的“ tabindex”。
+   * @param isEnabled是否啟用了焦點陷阱。
+   * @param anchor錨，用於在其上切換tabindex。
    */
   private _toggleAnchorTabIndex(isEnabled: boolean, anchor: HTMLElement) {
     // Remove the tabindex completely, rather than setting it to -1, because if the
     // element has a tabindex, the user might still hit it when navigating with the arrow keys.
+    //完全刪除tabindex，而不是將其設置為-1，因為如果
+    //元素具有tabindex，用戶在使用箭頭鍵導航時仍可能會點擊它。
     isEnabled ? anchor.setAttribute('tabindex', '0') : anchor.removeAttribute('tabindex');
   }
 
   /**
    * Toggles the`tabindex` of both anchors to either trap Tab focus or allow it to escape.
    * @param enabled: Whether the anchors should trap Tab.
+   * 切換兩個錨點的“ tabindex”以捕獲Tab焦點或使其脫離。
+   * 已啟用@param：錨點是否應捕獲Tab。
    */
   protected toggleAnchors(enabled: boolean) {
     if (this._startAnchor && this._endAnchor) {
@@ -375,6 +395,7 @@ export class FocusTrap {
   }
 
   /** Executes a function when the zone is stable. */
+  // 當區域穩定時執行功能。 
   private _executeOnStable(fn: () => any): void {
     if (this._ngZone.isStable) {
       fn();
@@ -388,6 +409,9 @@ export class FocusTrap {
  * Factory that allows easy instantiation of focus traps.
  * @deprecated Use `ConfigurableFocusTrapFactory` instead.
  * @breaking-change for 11.0.0 Remove this class.
+ * 允許輕鬆實例化焦點陷阱的工廠。
+ * @不建議使用`ConfigurableFocusTrapFactory`來代替。
+ * @ 0.0.11的@ breaking-change刪除此類。
  */
 @Injectable({ providedIn: 'root' })
 export class FocusTrapFactory {

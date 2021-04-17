@@ -409,7 +409,7 @@ export class FocusTrap {
  * Factory that allows easy instantiation of focus traps.
  * @deprecated Use `ConfigurableFocusTrapFactory` instead.
  * @breaking-change for 11.0.0 Remove this class.
- * 允許輕鬆實例化焦點陷阱的工廠。
+ * 允許輕鬆實例化 focus trap 的工廠。
  * @不建議使用`ConfigurableFocusTrapFactory`來代替。
  * @ 0.0.11的@ breaking-change刪除此類。
  */
@@ -431,6 +431,11 @@ export class FocusTrapFactory {
    * @param deferCaptureElements Defers the creation of focus-capturing elements to be done
    *     manually by the user.
    * @returns The created focus trap instance.
+   * 在給定元素周圍創建一個焦點捕獲區域。
+   * @param元素將圍繞其捕獲焦點的元素。
+   * @param deferCaptureElements推遲創建焦點捕獲元素
+   * 由用戶手動執行。
+   * @returns創建的焦點陷阱實例。
    */
   create(element: HTMLElement, deferCaptureElements: boolean = false): FocusTrap {
     return new FocusTrap(
@@ -439,6 +444,7 @@ export class FocusTrapFactory {
 }
 
 /** Directive for trapping focus within a region. */
+// 在區域內捕獲焦點的指令。
 @Directive({
   selector: '[cdkTrapFocus]',
   exportAs: 'cdkTrapFocus',
@@ -447,12 +453,15 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   private _document: Document;
 
   /** Underlying FocusTrap instance. */
+  // 基礎FocusTrap實例。 
   focusTrap: FocusTrap;
 
   /** Previously focused element to restore focus to upon destroy when using autoCapture. */
+  // 使用autoCapture時，先前已聚焦的元素可將焦點恢復為銷毀。
   private _previouslyFocusedElement: HTMLElement | null = null;
 
   /** Whether the focus trap is active. */
+  // 聚焦陷阱是否處於活動狀態。
   @Input('cdkTrapFocus')
   get enabled(): boolean { return this.focusTrap.enabled; }
   set enabled(value: boolean) { this.focusTrap.enabled = coerceBooleanProperty(value); }
@@ -460,6 +469,8 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   /**
    * Whether the directive should automatically move focus into the trapped region upon
    * initialization and return focus to the previous activeElement upon destruction.
+   * 指令是否應在以下情況下自動將焦點移到陷阱區域中：
+   * 初始化，並在銷毀時將焦點返回到先前的activeElement。
    */
   @Input('cdkTrapFocusAutoCapture')
   get autoCapture(): boolean { return this._autoCapture; }
@@ -480,6 +491,8 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
 
     // If we stored a previously focused element when using autoCapture, return focus to that
     // element now that the trapped region is being destroyed.
+    // 如果在使用autoCapture時存儲了先前關注的元素，則將焦點返回到該元素
+    // 元素說明被捕獲的區域正在被銷毀。
     if (this._previouslyFocusedElement) {
       this._previouslyFocusedElement.focus();
       this._previouslyFocusedElement = null;

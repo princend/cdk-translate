@@ -146,6 +146,10 @@ export class FocusTrap {
    * user specified, or the first tabbable element.
    * @returns Returns a promise that resolves with a boolean, depending
    * on whether focus was moved successfully.
+   * 等待區域穩定，然後將焦點放在第一個元素上
+   * 用戶指定的，或第一個可標籤元素。
+   * @returns返回一個 Promise<boolean>，具體取決於
+   * 焦點是否成功轉移。
    */
   focusInitialElementWhenReady(options?: FocusOptions): Promise<boolean> {
     return new Promise<boolean>(resolve => {
@@ -158,6 +162,10 @@ export class FocusTrap {
    * the first tabbable element within the focus trap region.
    * @returns Returns a promise that resolves with a boolean, depending
    * on whether focus was moved successfully.
+   * 等待區域穩定，然後聚焦
+   * 焦點陷阱區域內的第一個可tabbable元素。 (tabable 可以被tab鍵切換的)
+   * @returns返回一個Promise<boolean>，具體取決於
+   * 焦點是否成功轉移。
    */
   focusFirstTabbableElementWhenReady(options?: FocusOptions): Promise<boolean> {
     return new Promise<boolean>(resolve => {

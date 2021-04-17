@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform} from '@angular/cdk/platform';
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 
 
 /** Set of possible high-contrast mode backgrounds. */
@@ -52,7 +52,7 @@ export const HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS = 'cdk-high-contrast-active';
  * 模式。此服務無法檢測到由Chrome“高對比度”添加的高對比度模式
  * 瀏覽器擴展。
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class HighContrastModeDetector {
   private _document: Document;
 
@@ -61,6 +61,7 @@ export class HighContrastModeDetector {
   }
 
   /** Gets the current high-contrast-mode for the page. */
+  // 獲取頁面的當前高對比度模式。
   getHighContrastMode(): HighContrastMode {
     if (!this._platform.isBrowser) {
       return HighContrastMode.NONE;
@@ -69,6 +70,9 @@ export class HighContrastModeDetector {
     // Create a test element with an arbitrary background-color that is neither black nor
     // white; high-contrast mode will coerce the color to either black or white. Also ensure that
     // appending the test element to the DOM does not affect layout by absolutely positioning it
+    // 創建一個具有任意背景色（既不是黑色也不是黑色）的測試元素
+    // 白色的;高對比度模式會將顏色強制為黑色或白色。同時確保
+    // 將測試元素附加到DOM不會通過絕對定位來影響佈局
     const testElement = this._document.createElement('div');
     testElement.style.backgroundColor = 'rgb(1,2,3)';
     testElement.style.position = 'absolute';
@@ -78,11 +82,15 @@ export class HighContrastModeDetector {
     // browsers. Once we get this color, we no longer need the test element. Access the `window`
     // via the document so we can fake it in tests. Note that we have extra null checks, because
     // this logic will likely run during app bootstrap and throwing can break the entire app.
+    // 獲取背景顏色的計算樣式，收合空格以在之間進行正規化
+    // 瀏覽器。一旦獲得這種顏色，就不再需要測試元素。進入窗口
+    // 通過文檔，以便我們可以在測試中進行偽造。請注意，我們還有額外的null檢查，因為
+    // 此邏輯可能會在應用程序引導期間運行，並且拋出可能會破壞整個應用程序。
     const documentWindow = this._document.defaultView || window;
     const computedStyle = (documentWindow && documentWindow.getComputedStyle) ?
-        documentWindow.getComputedStyle(testElement) : null;
+      documentWindow.getComputedStyle(testElement) : null;
     const computedColor =
-        (computedStyle && computedStyle.backgroundColor || '').replace(/ /g, '');
+      (computedStyle && computedStyle.backgroundColor || '').replace(/ /g, '');
     this._document.body.removeChild(testElement);
 
     switch (computedColor) {
@@ -93,10 +101,12 @@ export class HighContrastModeDetector {
   }
 
   /** Applies CSS classes indicating high-contrast mode to document body (browser-only). */
+  // 將指示高對比度模式的CSS類應用於文檔正文（僅瀏覽器）。
   _applyBodyHighContrastModeCssClasses(): void {
     if (this._platform.isBrowser && this._document.body) {
       const bodyClasses = this._document.body.classList;
       // IE11 doesn't support `classList` operations with multiple arguments
+      // IE11不支持帶有多個參數的`classList`操作
       bodyClasses.remove(HIGH_CONTRAST_MODE_ACTIVE_CSS_CLASS);
       bodyClasses.remove(BLACK_ON_WHITE_CSS_CLASS);
       bodyClasses.remove(WHITE_ON_BLACK_CSS_CLASS);

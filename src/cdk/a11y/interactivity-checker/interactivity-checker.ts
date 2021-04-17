@@ -6,15 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform} from '@angular/cdk/platform';
-import {Injectable} from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
+import { Injectable } from '@angular/core';
 
 /**
  * Configuration for the isFocusable method.
+ * isFocusable方法的配置。
  */
 export class IsFocusableConfig {
   /**
    * Whether to count an element as focusable even if it is not currently visible.
+   * 是否將一個元素視為可聚焦元素，即使該元素當前不可見。
    */
   ignoreVisibility: boolean = false;
 }
@@ -22,25 +24,35 @@ export class IsFocusableConfig {
 // The InteractivityChecker leans heavily on the ally.js accessibility utilities.
 // Methods like `isTabbable` are only covering specific edge-cases for the browsers which are
 // supported.
+// InteractivityChecker在很大程度上依賴ally.js可訪問性實用程序。
+// 諸如“ isTabbable”之類的方法僅涵蓋瀏覽器的特定邊緣情況，即
+// 支持的。
 
 /**
  * Utility for checking the interactivity of an element, such as whether is is focusable or
  * tabbable.
+ * 實用程序，用於檢查元素的交互性，例如是否可聚焦或 tab切換
+ * 
  */
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class InteractivityChecker {
 
-  constructor(private _platform: Platform) {}
+  constructor(private _platform: Platform) { }
 
   /**
    * Gets whether an element is disabled.
+   * 獲取元素是否被禁用。
    *
    * @param element Element to be checked.
    * @returns Whether the element is disabled.
+   * @param element要檢查的元素。
+   * @returns元素是否被禁用。
    */
   isDisabled(element: HTMLElement): boolean {
     // This does not capture some cases, such as a non-form control with a disabled attribute or
     // a form control inside of a disabled form, but should capture the most common cases.
+    // 這不會捕獲某些情況，例如具有禁用屬性的非表單控件或
+    // 禁用的表單內的表單控件，但應捕獲最常見的情況。
     return element.hasAttribute('disabled');
   }
 
@@ -49,6 +61,10 @@ export class InteractivityChecker {
    *
    * This will capture states like `display: none` and `visibility: hidden`, but not things like
    * being clipped by an `overflow: hidden` parent or being outside the viewport.
+   * 獲取元素是否出於交互目的可見。
+   *
+   * 這將捕獲“display: none”和“visibility: hidden”之類的狀態，但不會捕獲諸如
+   * 被“overflow: hidden”父級或位於視口之外。
    *
    * @returns Whether the element is visible.
    */
@@ -59,12 +75,15 @@ export class InteractivityChecker {
   /**
    * Gets whether an element can be reached via Tab key.
    * Assumes that the element has already been checked with isFocusable.
+   * 獲取是否可以通過Tab鍵到達元素。
+   * 假定該元素已經用isFocusable檢查過。
    *
    * @param element Element to be checked.
    * @returns Whether the element is tabbable.
    */
   isTabbable(element: HTMLElement): boolean {
     // Nothing is tabbable on the server 😎
+    // 服務器上的所有內容都不是可選項
     if (!this._platform.isBrowser) {
       return false;
     }
@@ -73,11 +92,13 @@ export class InteractivityChecker {
 
     if (frameElement) {
       // Frame elements inherit their tabindex onto all child elements.
+      // 框架元素將其tabindex繼承到所有子元素上。
       if (getTabIndexValue(frameElement) === -1) {
         return false;
       }
 
       // Browsers disable tabbing to an element inside of an invisible frame.
+      // 瀏覽器禁用在不可見框架內的元素的製表鍵。
       if (!this.isVisible(frameElement)) {
         return false;
       }
@@ -94,10 +115,14 @@ export class InteractivityChecker {
       // The frame or object's content may be tabbable depending on the content, but it's
       // not possibly to reliably detect the content of the frames. We always consider such
       // elements as non-tabbable.
+      // 根據內容的不同，框架或對象的內容可能是 tabbable，但是
+      // 無法可靠地檢測框架的內容。我們一直認為這樣
+      // non-tabbable 的元素。
       return false;
     }
 
     // In iOS, the browser only considers some specific elements as tabbable.
+    // 在iOS中，瀏覽器僅將某些特定元素視為可選項。
     if (this._platform.WEBKIT && this._platform.IOS && !isPotentiallyTabbableIOS(element)) {
       return false;
     }
@@ -105,11 +130,15 @@ export class InteractivityChecker {
     if (nodeName === 'audio') {
       // Audio elements without controls enabled are never tabbable, regardless
       // of the tabindex attribute explicitly being set.
+      // 啟用了控件的音頻元素永遠不會成為可選項，無論
+      // 顯式設置的tabindex屬性的。
       if (!element.hasAttribute('controls')) {
         return false;
       }
       // Audio elements with controls are by default tabbable unless the
       // tabindex attribute is set to `-1` explicitly.
+      // 默認情況下，帶有控件的音頻元素是可選項的，除非
+      // tabindex屬性顯式設置為-1。
       return tabIndexValue !== -1;
     }
 
@@ -118,17 +147,25 @@ export class InteractivityChecker {
       // is not tabbable. Note: We cannot rely on the default `HTMLElement.tabIndex`
       // property as that one is set to `-1` in Chrome, Edge and Safari v13.1. The
       // tabindex attribute is the source of truth here.
+      //對於所有視頻元素，如果tabindex屬性設置為-1，則視頻 不可tabbable。
+      //注意：我們不能依賴默認的HTMLElement.tabIndex屬性，
+      //因為在Chrome，Edge和Safari v13.1中將其設置為-1。這
+      //這裡的tabindex屬性是信息源(SOT)。
       if (tabIndexValue === -1) {
         return false;
       }
       // If the tabindex is explicitly set, and not `-1` (as per check before), the
       // video element is always tabbable (regardless of whether it has controls or not).
+      // 如果tabindex是顯式設置的，而不是“ -1”（按照之前的檢查），則
+      // video元素始終是可Tabable的（無論它是否具有控件）。
       if (tabIndexValue !== null) {
         return true;
       }
       // Otherwise (when no explicit tabindex is set), a video is only tabbable if it
       // has controls enabled. Firefox is special as videos are always tabbable regardless
       // of whether there are controls or not.
+      // 否則（當未設置任何明確的tabindex時），video 是 tabbable 假如已啟用控件
+      //  Firefox 無論如何，video總是tabbable的
       return this._platform.FIREFOX || element.hasAttribute('controls');
     }
 
@@ -169,16 +206,16 @@ function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
   // See https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js#L12
   return !!(element.offsetWidth || element.offsetHeight ||
-      (typeof element.getClientRects === 'function' && element.getClientRects().length));
+    (typeof element.getClientRects === 'function' && element.getClientRects().length));
 }
 
 /** Gets whether an element's  */
 function isNativeFormElement(element: Node) {
   let nodeName = element.nodeName.toLowerCase();
   return nodeName === 'input' ||
-      nodeName === 'select' ||
-      nodeName === 'button' ||
-      nodeName === 'textarea';
+    nodeName === 'select' ||
+    nodeName === 'button' ||
+    nodeName === 'textarea';
 }
 
 /** Gets whether an element is an `<input type="hidden">`. */
@@ -238,9 +275,9 @@ function isPotentiallyTabbableIOS(element: HTMLElement): boolean {
   let inputType = nodeName === 'input' && (element as HTMLInputElement).type;
 
   return inputType === 'text'
-      || inputType === 'password'
-      || nodeName === 'select'
-      || nodeName === 'textarea';
+    || inputType === 'password'
+    || nodeName === 'select'
+    || nodeName === 'textarea';
 }
 
 /**
@@ -254,9 +291,9 @@ function isPotentiallyFocusable(element: HTMLElement): boolean {
   }
 
   return isNativeFormElement(element) ||
-      isAnchorWithHref(element) ||
-      element.hasAttribute('contenteditable') ||
-      hasValidTabIndex(element);
+    isAnchorWithHref(element) ||
+    element.hasAttribute('contenteditable') ||
+    hasValidTabIndex(element);
 }
 
 /** Gets the parent window of a DOM node with regards of being inside of an iframe. */

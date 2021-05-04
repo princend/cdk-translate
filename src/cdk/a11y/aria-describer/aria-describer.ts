@@ -35,7 +35,7 @@ export const MESSAGES_CONTAINER_ID = 'cdk-describedby-message-container';
 export const CDK_DESCRIBEDBY_ID_PREFIX = 'cdk-describedby-message';
 
 /** Attribute given to each host element that is described by a message element. */
-/* 賦予消息元素描述的每個主機元素的屬性。 * /
+/* 賦予消息元素描述的每個主機元素的屬性。 */
 export const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = 'cdk-describedby-host';
 
 /** Global incremental identifier for each registered message element. */

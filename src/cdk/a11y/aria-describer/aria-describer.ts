@@ -89,6 +89,7 @@ export class AriaDescriber implements OnDestroy {
   describe(hostElement: Element, message: HTMLElement): void;
 
   describe(hostElement: Element, message: string | HTMLElement, role?: string): void {
+    //先判斷可不可被描述
     if (!this._canBeDescribed(hostElement, message)) {
       return;
     }

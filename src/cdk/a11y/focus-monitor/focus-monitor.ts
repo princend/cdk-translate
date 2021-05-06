@@ -48,11 +48,16 @@ export const enum FocusMonitorDetectionMode {
    * Any mousedown, keydown, or touchstart event that happened in the previous
    * tick or the current tick will be used to assign a focus event's origin (to
    * either mouse, keyboard, or touch). This is the default option.
+   * 上一次發生的任何mousedown，keydown或touchstart事件
+   * tick或當前tick將用於分配焦點事件的來源（以
+   * 鼠標，鍵盤或觸摸）。這是默認選項。
    */
   IMMEDIATE,
   /**
    * A focus event's origin is always attributed to the last corresponding
    * mousedown, keydown, or touchstart event, no matter how long ago it occured.
+   * 焦點事件的origin總是歸因於最後一個對應事件
+   * mousedown，keydown或touchstart事件，無論它發生多久了。
    */
   EVENTUAL
 }

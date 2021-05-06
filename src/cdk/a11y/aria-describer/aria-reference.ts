@@ -49,4 +49,7 @@ export function getAriaReferenceIds(el: Element, attr: string): string[] {
   // Get string array of all individual ids (whitespace delimited) in the attribute value
   // 獲取屬性值中所有單個ID（以空格分隔）的字符串數組
   return (el.getAttribute(attr) || '').match(/\S+/g) || [];
+
+  //[\s]表示，只要出现空白就匹配
+  //[\S]表示，非空白就匹配
 }

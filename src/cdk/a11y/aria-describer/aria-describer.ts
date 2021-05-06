@@ -46,7 +46,7 @@ let nextId = 0;
 /**
  *  放置在文檔中的所有已註冊消息元素的全局映射。
  */
-const messageRegistry = new Map<string | Element, RegisteredMessage>();
+const messageRegistry = new Map<string | Element, RegisteredMessage>(); // map 參考 https://zhuanlan.zhihu.com/p/77897608
 
 /** Container for all registered messages. */
 /** 

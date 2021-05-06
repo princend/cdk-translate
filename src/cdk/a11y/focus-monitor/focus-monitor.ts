@@ -63,7 +63,7 @@ export const enum FocusMonitorDetectionMode {
 }
 
 /** Injectable service-level options for FocusMonitor. */
-export interface FocusMonitorOptions {
+export interface  FocusMonitorOptions {
   detectionMode?: FocusMonitorDetectionMode;
 }
 
@@ -80,6 +80,8 @@ type MonitoredElementInfo = {
 /**
  * Event listener options that enable capturing and also
  * mark the listener as passive if the browser supports it.
+ * 事件偵聽器選項可實現捕獲以及
+ * 如果瀏覽器支持，則將偵聽器標記為被動。
  */
 const captureEventListenerOptions = normalizePassiveListenerOptions({
   passive: true,
@@ -115,7 +117,7 @@ export class FocusMonitor implements OnDestroy {
   private _windowFocusTimeoutId: number;
 
   /** The timeout id of the origin clearing timeout. */
-  // 清除源超時的超時ID。
+  // 用來記錄清除timeout的id。
   private _originTimeoutId: number;
 
   /** Map of elements being monitored to their info. */
@@ -134,14 +136,14 @@ export class FocusMonitor implements OnDestroy {
    * 跟踪我們當前已將焦點/模糊處理程序綁定到的根節點，
    * 以及它們包含的受監視元素的數量。我們必須對待焦點/模糊
    * 處理程序與其他事件不同，因為瀏覽器不會發出事件
-   * 當焦點移到陰影根內部時，顯示到文檔中。
+   * 當焦點移到shadowRoot時，顯示到文檔中。
    */
   private _rootNodeFocusListenerCount = new Map<HTMLElement | Document | ShadowRoot, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
    * event.
-   * 指定的檢測模式，用於歸因於焦點
+   * 指定的檢測模式，用於賦予屬性於焦點
    * 事件。
    */
   private readonly _detectionMode: FocusMonitorDetectionMode;
@@ -155,6 +157,7 @@ export class FocusMonitor implements OnDestroy {
 
   private _documentKeydownListener = () => {
     // On keydown record the origin and clear any touch event that may be in progress.
+    // 按下鍵盤時，記錄原點並清除可能正在進行的任何觸摸事件。
     this._lastTouchTarget = null;
     this._setOriginForCurrentEventQueue('keyboard');
   }
@@ -277,7 +280,7 @@ export class FocusMonitor implements OnDestroy {
 
   monitor(element: HTMLElement | ElementRef<HTMLElement>,
     checkChildren: boolean = false): Observable<FocusOrigin> {
-    const nativeElement = coerceElement(element); //型別檢查 是不是ElementRef的實體
+    const nativeElement = coerceElement(element); //強迫回傳 HTMLElement 型別 參考:https://ithelp.ithome.com.tw/articles/10197609
 
     // Do nothing if we're not on the browser platform or the passed in node isn't an element.
     // 如果我們不在瀏覽器平台上，或者傳入的節點不是元素，則不執行任何操作。
@@ -715,7 +718,7 @@ function getTarget(event: Event): HTMLElement | null {
   // If an event is bound outside the Shadow DOM, the `event.target` will
   // point to the shadow root so we have to use `composedPath` instead.
   // 如果事件綁定在Shadow DOM之外，則`event.target`將
-  // 指向影子根，因此我們必須改用`composedPath`。
+  // 指向shadowRoot，因此我們必須改用`composedPath`。
   return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
 }
 

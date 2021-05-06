@@ -244,7 +244,7 @@ export class FocusMonitor implements OnDestroy {
 
     // We need to walk up the ancestor chain in order to support `checkChildren`.
     // 為了支持`checkChildren`，我們需要走在祖先鏈上。
-    // TODO ask
+    // call , apply ,bind 參考 https://www.fooish.com/javascript/this.html
     for (let element = target; element; element = element.parentElement) {
       handler.call(this, event as FocusEvent, element);
     }
@@ -293,7 +293,7 @@ export class FocusMonitor implements OnDestroy {
     // to the `document`, if focus is moving within the same shadow root.
     // 如果元素在影子DOM內，則需要將焦點/模糊監聽器綁定到
     // 陰影根目錄，而不是`document`，因為瀏覽器不會發出焦點事件
-    // 如果焦點在同一陰影根內移動，則移至`document`。
+    // 如果焦點在同一ShadowRoot內移動，則移至`document`。
     const rootNode = _getShadowRoot(nativeElement) || this._getDocument();
     const cachedInfo = this._elementInfo.get(nativeElement);
 
@@ -397,7 +397,7 @@ export class FocusMonitor implements OnDestroy {
       this._setOriginForCurrentEventQueue(origin);
 
       // `focus` isn't available on the server
-      //`focus`在服務器上不可用
+      //`focus`在server上不可用
       if (typeof nativeElement.focus === 'function') {
         nativeElement.focus(options);
       }
@@ -522,7 +522,7 @@ export class FocusMonitor implements OnDestroy {
     // focus event. When that blur event fires we know that whatever follows is not a result of the
     // touchstart.
 
-    //注意（mmalerba）：這個實現不是很完美，邊緣情況很小。
+    // 筆記（mmalerba）：這個實現不是很完美，邊緣情況很小。
     //考慮以下dom結構：
     //
     // <div #parent tabindex =“ 0” cdkFocusClasses>
@@ -603,6 +603,7 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
+    // 判斷是不是在瀏覽器
     if (!this._platform.isBrowser) {
       return;
     }
@@ -737,8 +738,8 @@ function getTarget(event: Event): HTMLElement | null {
  * 以編程方式），並向該元素添加相應的類。
  *
  * 該指令有兩種變體：
- * 1）cdkMonitorElementFocus：如果某個元素的子元素是
- * 專注。
+ * 1）cdkMonitorElementFocus：如果某個元素的子元素是被focus
+ * 
  * 2）cdkMonitorSubtreeFocus：如果某個元素或其任何子元素均已聚焦，則認為該元素已聚焦。
  */
 @Directive({

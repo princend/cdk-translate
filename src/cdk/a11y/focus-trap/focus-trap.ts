@@ -529,4 +529,6 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
 
   static ngAcceptInputType_enabled: BooleanInput;
   static ngAcceptInputType_autoCapture: BooleanInput;
+
+  // static 參考 https://medium.com/enjoy-life-enjoy-coding/typescript-從-ts-開始學習物件導向-class-用法-20ade3ce26b8
 }

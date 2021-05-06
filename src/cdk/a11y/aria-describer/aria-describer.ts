@@ -198,7 +198,7 @@ export class AriaDescriber implements OnDestroy {
   }
 
   /** Creates the global container for all aria-describedby messages. */
-  /**為所有由消息描述的詠嘆調創建全局容器。 */
+  /**為所有aria-describedby 訊息 創建全局容器。 */
   private _createMessagesContainer() {
     if (!messagesContainer) {
       const preExistingContainer = this._document.getElementById(MESSAGES_CONTAINER_ID);

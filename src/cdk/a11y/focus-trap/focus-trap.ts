@@ -378,6 +378,7 @@ export class FocusTrap {
     // element has a tabindex, the user might still hit it when navigating with the arrow keys.
     //完全刪除tabindex，而不是將其設置為-1，因為如果
     //元素具有tabindex，用戶在使用箭頭鍵導航時仍可能會點擊它。
+    // tabindex 參考 https://developers.google.com/web/fundamentals/accessibility/focus/using-tabindex?hl=zh-tw
     isEnabled ? anchor.setAttribute('tabindex', '0') : anchor.removeAttribute('tabindex');
   }
 

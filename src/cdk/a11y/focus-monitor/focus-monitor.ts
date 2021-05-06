@@ -223,7 +223,7 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   constructor(
-    private _ngZone: NgZone,
+    private _ngZone: NgZone, // 參考 https://ithelp.ithome.com.tw/articles/10208831
     private _platform: Platform,
     /** @breaking-change 11.0.0 make document required */
     @Optional() @Inject(DOCUMENT) document: any | null,
@@ -714,11 +714,13 @@ export class FocusMonitor implements OnDestroy {
 
 /** Gets the target of an event, accounting for Shadow DOM. */
 // 獲取事件的目標，說明Shadow DOM。
+// 參考 https://developer.mozilla.org/zh-CN/docs/Web/Web_Components/Using_shadow_DOM
 function getTarget(event: Event): HTMLElement | null {
   // If an event is bound outside the Shadow DOM, the `event.target` will
   // point to the shadow root so we have to use `composedPath` instead.
   // 如果事件綁定在Shadow DOM之外，則`event.target`將
   // 指向shadowRoot，因此我們必須改用`composedPath`。
+  // 參考 https://developer.mozilla.org/zh-CN/docs/Web/API/Event/composedPath
   return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
 }
 

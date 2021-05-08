@@ -237,6 +237,7 @@ export class CdkAriaLive implements OnDestroy {
           .subscribe(() => {
             // Note that we use textContent here, rather than innerText, in order to avoid a reflow.
             // 注意，為了避免重排，我們在這裡使用textContent而不是innerText。
+            // 參考https://developer.mozilla.org/zh-TW/docs/Glossary/Reflow
             const elementText = this._elementRef.nativeElement.textContent;
 
             // The `MutationObserver` fires also for attribute

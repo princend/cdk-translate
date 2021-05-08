@@ -15,6 +15,10 @@ import {InjectionToken} from '@angular/core';
 
 /** Possible politeness levels. 
  * 可能的Politeness程度。
+ *  off: 等同於不標示 Live Region，讀屏軟件不做任何處理
+ * polite: 通常使用這個設定，在用戶的當前行爲終止後，讀屏軟件發出消息通知
+ * assertive: 比 polite 的優先級高，當同時有其它消息時，讀屏軟件會先讀 assertive 的消息
+ * 參考 https://lepture.com/zh/2017/fe-live-regions
 */
 export type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
 

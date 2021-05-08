@@ -75,7 +75,7 @@ export class EventListenerFocusTrapInertStrategy implements FocusTrapInertStrate
       //請等待以確保在重新對焦之前仍啟用FocusTrap。
       setTimeout(() => {
         // Check whether focus wasn't put back into the focus trap while the timeout was pending.
-        // 檢查超時未決期間是否沒有將焦點放回焦點陷阱。
+        // 檢查超時pending期間是否沒有將焦點放回焦點陷阱。
         if (focusTrap.enabled && !focusTrapRoot.contains(focusTrap._document.activeElement)) {
           focusTrap.focusFirstTabbableElement();
         }

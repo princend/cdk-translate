@@ -195,6 +195,7 @@ export class LiveAnnouncer implements OnDestroy {
     liveEl.classList.add(elementClass);
     liveEl.classList.add('cdk-visually-hidden');
 
+    // 參考 https://developers.google.com/web/fundamentals/accessibility/semantics-aria/hiding-and-updating-content?hl=zh-tw
     liveEl.setAttribute('aria-atomic', 'true');
     liveEl.setAttribute('aria-live', 'polite');
 

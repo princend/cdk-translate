@@ -187,7 +187,7 @@ export class InteractivityChecker {
     // Perform checks in order of left to most expensive.
     // Again, naive approach that does not capture many edge cases and browser quirks.
     // 按照從left到expensive的順序執行檢查。
-    // 同樣，這種幼稚的方法無法捕獲許多極端情況和瀏覽器 quriks 模式。
+    // 同樣，這種幼稚的方法無法捕獲許多極端情況和瀏覽器 quirks 模式。
     return isPotentiallyFocusable(element) && !this.isDisabled(element) &&
       (config?.ignoreVisibility || this.isVisible(element));
   }
@@ -212,6 +212,7 @@ function getFrameElement(window: Window) {
 
 /** Checks whether the specified element has any geometry / rectangles. */
 // / **检查指定的元素是否具有任何几何形状/矩形。 * /
+// KK[dʒɪˋɑmətrɪ]
 function hasGeometry(element: HTMLElement): boolean {
   // Use logic from jQuery to check for an invisible element.
   // 使用jQuery的逻辑检查不可见的元素。

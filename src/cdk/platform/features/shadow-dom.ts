@@ -19,7 +19,7 @@ export function _supportsShadowDom(): boolean {
 }
 
 /** Gets the shadow root of an element, if supported and the element is inside the Shadow DOM. */
-/** 獲取元素的影子根（如果支持）並且該元素在Shadow DOM內。 */
+/** 獲取元素的ShadowRoot（如果支持）並且該元素在Shadow DOM內。 */
 export function _getShadowRoot(element: HTMLElement): ShadowRoot | null {
   if (_supportsShadowDom()) {
     const rootNode = element.getRootNode ? element.getRootNode() : null;

@@ -119,7 +119,7 @@ export class FocusMonitor implements OnDestroy {
   private _windowFocusTimeoutId: number;
 
   /** The timeout id of the origin clearing timeout. */
-  // 清除源超時的超時ID。
+  // 用來記錄清除timeout的id。
   private _originTimeoutId: number;
 
   /** Map of elements being monitored to their info. */
@@ -138,14 +138,14 @@ export class FocusMonitor implements OnDestroy {
    * 跟踪我們當前已將焦點/模糊處理程序綁定到的根節點，
    * 以及它們包含的受監視元素的數量。我們必須對待焦點/模糊
    * 處理程序與其他事件不同，因為瀏覽器不會發出事件
-   * 當焦點移到陰影根內部時，顯示到文檔中。
+   * 當焦點移到shadowRoot時，顯示到文檔中。
    */
   private _rootNodeFocusListenerCount = new Map<HTMLElement | Document | ShadowRoot, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
    * event.
-   * 指定的檢測模式，用於歸因於焦點
+   * 指定的檢測模式，用於賦予屬性於焦點
    * 事件。
    */
   private readonly _detectionMode: FocusMonitorDetectionMode;
@@ -159,6 +159,7 @@ export class FocusMonitor implements OnDestroy {
 
   private _documentKeydownListener = () => {
     // On keydown record the origin and clear any touch event that may be in progress.
+    // 按下鍵盤時，記錄原點並清除可能正在進行的任何觸摸事件。
     this._lastTouchTarget = null;
     this._setOriginForCurrentEventQueue('keyboard');
   }
@@ -224,7 +225,7 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   constructor(
-    private _ngZone: NgZone,
+    private _ngZone: NgZone, // 參考 https://ithelp.ithome.com.tw/articles/10208831
     private _platform: Platform,
     /** @breaking-change 11.0.0 make document required */
     @Optional() @Inject(DOCUMENT) document: any | null,
@@ -245,7 +246,7 @@ export class FocusMonitor implements OnDestroy {
 
     // We need to walk up the ancestor chain in order to support `checkChildren`.
     // 為了支持`checkChildren`，我們需要走在祖先鏈上。
-    // TODO ask
+    // call , apply ,bind 參考 https://www.fooish.com/javascript/this.html
     for (let element = target; element; element = element.parentElement) {
       handler.call(this, event as FocusEvent, element);
     }
@@ -281,7 +282,7 @@ export class FocusMonitor implements OnDestroy {
 
   monitor(element: HTMLElement | ElementRef<HTMLElement>,
     checkChildren: boolean = false): Observable<FocusOrigin> {
-    const nativeElement = coerceElement(element); //型別檢查 是不是ElementRef的實體
+    const nativeElement = coerceElement(element); //強迫回傳 HTMLElement 型別 參考:https://ithelp.ithome.com.tw/articles/10197609
 
     // Do nothing if we're not on the browser platform or the passed in node isn't an element.
     // 如果我們不在瀏覽器平台上，或者傳入的節點不是元素，則不執行任何操作。
@@ -294,7 +295,7 @@ export class FocusMonitor implements OnDestroy {
     // to the `document`, if focus is moving within the same shadow root.
     // 如果元素在影子DOM內，則需要將焦點/模糊監聽器綁定到
     // 陰影根目錄，而不是`document`，因為瀏覽器不會發出焦點事件
-    // 如果焦點在同一陰影根內移動，則移至`document`。
+    // 如果焦點在同一ShadowRoot內移動，則移至`document`。
     const rootNode = _getShadowRoot(nativeElement) || this._getDocument();
     const cachedInfo = this._elementInfo.get(nativeElement);
 
@@ -398,7 +399,7 @@ export class FocusMonitor implements OnDestroy {
       this._setOriginForCurrentEventQueue(origin);
 
       // `focus` isn't available on the server
-      //`focus`在服務器上不可用
+      //`focus`在server上不可用
       if (typeof nativeElement.focus === 'function') {
         nativeElement.focus(options);
       }
@@ -523,7 +524,7 @@ export class FocusMonitor implements OnDestroy {
     // focus event. When that blur event fires we know that whatever follows is not a result of the
     // touchstart.
 
-    //注意（mmalerba）：這個實現不是很完美，邊緣情況很小。
+    // 筆記（mmalerba）：這個實現不是很完美，邊緣情況很小。
     //考慮以下dom結構：
     //
     // <div #parent tabindex =“ 0” cdkFocusClasses>
@@ -604,6 +605,7 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
+    // 判斷是不是在瀏覽器
     if (!this._platform.isBrowser) {
       return;
     }
@@ -715,11 +717,13 @@ export class FocusMonitor implements OnDestroy {
 
 /** Gets the target of an event, accounting for Shadow DOM. */
 // 獲取事件的目標，說明Shadow DOM。
+// 參考 https://developer.mozilla.org/zh-CN/docs/Web/Web_Components/Using_shadow_DOM
 function getTarget(event: Event): HTMLElement | null {
   // If an event is bound outside the Shadow DOM, the `event.target` will
   // point to the shadow root so we have to use `composedPath` instead.
   // 如果事件綁定在Shadow DOM之外，則`event.target`將
-  // 指向影子根，因此我們必須改用`composedPath`。
+  // 指向shadowRoot，因此我們必須改用`composedPath`。
+  // 參考 https://developer.mozilla.org/zh-CN/docs/Web/API/Event/composedPath
   return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
 }
 
@@ -736,8 +740,8 @@ function getTarget(event: Event): HTMLElement | null {
  * 以編程方式），並向該元素添加相應的類。
  *
  * 該指令有兩種變體：
- * 1）cdkMonitorElementFocus：如果某個元素的子元素是
- * 專注。
+ * 1）cdkMonitorElementFocus：如果某個元素的子元素是被focus
+ * 
  * 2）cdkMonitorSubtreeFocus：如果某個元素或其任何子元素均已聚焦，則認為該元素已聚焦。
  */
 @Directive({

@@ -62,7 +62,9 @@ export const enum FocusMonitorDetectionMode {
   EVENTUAL
 }
 
-/** Injectable service-level options for FocusMonitor. */
+/** Injectable service-level options for FocusMonitor. 
+ * FocusMonitor的可注入服務級別選項
+*/
 export interface FocusMonitorOptions {
   detectionMode?: FocusMonitorDetectionMode;
 }
@@ -80,6 +82,8 @@ type MonitoredElementInfo = {
 /**
  * Event listener options that enable capturing and also
  * mark the listener as passive if the browser supports it.
+ * 事件偵聽器選項可實現捕獲以及
+ * 如果瀏覽器支持，則將偵聽器標記為被動。
  */
 const captureEventListenerOptions = normalizePassiveListenerOptions({
   passive: true,

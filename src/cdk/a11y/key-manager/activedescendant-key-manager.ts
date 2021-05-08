@@ -13,8 +13,8 @@ import {ListKeyManager, ListKeyManagerOption} from './list-key-manager';
  * Each item must know how to style itself as active or inactive and whether or not it is
  * currently disabled.
  * 這是用於 highlightable 的 interface（由ActiveDescendantKeyManager使用）。
- * 每個項目都必須知道如何將自己設置為活動或非活動樣式，以及是否為
- * 當前已禁用。
+ * KK[dɪˋsɛndənt]
+ * 每個項目都必須知道如何將自己設置為活動或非活動樣式，以及是否為當前已禁用。
  */
 export interface Highlightable extends ListKeyManagerOption {
   /** Applies the styles for an active item to this item. 

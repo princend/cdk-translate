@@ -62,8 +62,10 @@ export const enum FocusMonitorDetectionMode {
   EVENTUAL
 }
 
-/** Injectable service-level options for FocusMonitor. */
-export interface  FocusMonitorOptions {
+/** Injectable service-level options for FocusMonitor. 
+ * FocusMonitor的可注入服務級別選項
+*/
+export interface FocusMonitorOptions {
   detectionMode?: FocusMonitorDetectionMode;
 }
 

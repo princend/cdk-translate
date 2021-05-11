@@ -114,6 +114,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * 設置謂詞函數，該函數確定哪些項應被跳過
    * 列出key manager。
    * @param謂詞函數，用於確定是否應跳過給定的項目。
+   * 
+   * 參考 https://www.freecodecamp.org/news/discover-functional-programming-in-javascript-with-this-thorough-introduction-a2ad9af2d645/
    */
   skipPredicate(predicate: (item: T) => boolean): this {
     this._skipPredicateFn = predicate;

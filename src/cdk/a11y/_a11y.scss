@@ -10,9 +10,11 @@
     width: 1px;
 
     // Avoid browsers rendering the focus ring in some cases.
+    // 在某些情況下，請避免瀏覽器呈現聚焦環。
     outline: 0;
 
     // Avoid some cases where the browser will still render the native controls (see #9049).
+    // 避免在某些情況下瀏覽器仍會呈現native controls（請參閱＃9049）。
     -webkit-appearance: none;
     -moz-appearance: none;
   }
@@ -21,6 +23,9 @@
 /// Emits the mixin's content nested under `$selector-context` if `$selector-context`
 /// is non-empty.
 /// @param selector-context The selector under which to nest the mixin's content.
+///如果`$ selector-context`，則退出嵌套在`$ selector-context`下的混合內容。
+///是非空的。
+/// @param selector-context在其下嵌套mixin內容的選擇器。
 @mixin _cdk-optionally-nest-content($selector-context) {
   @if ($selector-context == '') {
     @content;
@@ -42,6 +47,16 @@
 ///     * `on` - works for `Emulated`, `Native`, and `ShadowDom`
 ///     * `off` - works for `None`
 ///     * `any` - works for all encapsulation modes by emitting the CSS twice (default).
+/// 在高對比度模式下為用戶應用樣式。請注意，這僅適用於
+/// 到Microsoft瀏覽器。可以通過檢查html [hc]來包含Chrome。
+/// 屬性，但是Chrome處理高對比度的方式有所不同。
+/// 
+///  @param target以哪種高對比度設置為目標。默認為“ active”，可以是
+/// `white-on-black`或`black-on-white`。
+///  @param encapsulation是否為視圖封裝發出樣式。值是：
+///  *`on`-適用於`Emulated`，`Native`和`ShadowDom`
+///  *`off`-適用於`None`
+///  *`any`-通過發出兩次CSS（默認值）來適用於所有封裝模式。
 @mixin cdk-high-contrast($target: active, $encapsulation: 'any') {
   @if ($target != 'active' and $target != 'black-on-white' and $target != 'white-on-black') {
     @error 'Unknown cdk-high-contrast value "#{$target}" provided. ' +
@@ -56,6 +71,9 @@
   // If the selector context has multiple parts, such as `.section, .region`, just doing
   // `.cdk-high-contrast-xxx #{&}` will only apply the parent selector to the first part of the
   // context. We address this by nesting the selector context under .cdk-high-contrast.
+  //如果選擇器上下文包含多個部分，例如`.section，.region`，則只需執行
+  //`.cdk-high-contrast-xxx＃{＆}`只會將父選擇器應用於
+  // 語境。我們通過將選擇器上下文嵌套在.cdk-high-contrast下解決此問題。
   @at-root {
     $selector-context: #{&};
 

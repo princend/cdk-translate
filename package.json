@@ -93,7 +93,7 @@
     "@bazel/typescript": "^2.3.2",
     "@firebase/app-types": "^0.6.1",
     "@octokit/rest": "18.1.0",
-    "@schematics/angular": "^11.1.0",
+    "@schematics/angular": "^12.0.3",
     "@types/autoprefixer": "^9.7.2",
     "@types/browser-sync": "^2.26.1",
     "@types/fs-extra": "^9.0.5",
